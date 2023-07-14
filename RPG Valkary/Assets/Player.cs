@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private float jumpForce = 5;
     private float xInput;
-    private bool isMoving;
+    private int facingDir = 1;//for future use 
+    private bool facingRight = true;
     private Animator anim;
     void Start()
     {
@@ -21,7 +22,9 @@ public class Player : MonoBehaviour
     {
         Movement();
         CheckInputs();
+        FlipController();
         AnimationControllers();
+
     }
     private void CheckInputs()
     {
@@ -44,5 +47,19 @@ public class Player : MonoBehaviour
     {
         bool isMoving = rb.velocity.x != 0;
         anim.SetBool("isMoving", isMoving);
+    }
+
+     private void Flip()
+    {
+       facingDir *= -1;
+       facingRight = !facingRight;
+       transform.Rotate(0,180,0);
+    }
+
+     private void FlipController()
+    {  //when player start moving right but was looking leftward
+       if(rb.velocity.x >0 && !facingRight) Flip();
+       //when player start moving left but was looking rightward
+       if(rb.velocity.x <0 && facingRight) Flip();
     }
 }
