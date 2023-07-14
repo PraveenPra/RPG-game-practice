@@ -19,13 +19,30 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Movement();
+        CheckInputs();
+        AnimationControllers();
+    }
+    private void CheckInputs()
+    {
         xInput = Input.GetAxisRaw("Horizontal");
 
-        rb.velocity = new Vector2(xInput * moveSpeed, rb.velocity.y);
-        if (Input.GetKeyDown(KeyCode.Space))
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
-        isMoving = rb.velocity.x != 0;
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+    }
+    private void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void Movement()
+    {
+        rb.velocity = new Vector2(xInput * moveSpeed, rb.velocity.y);
+    }
+    private void AnimationControllers()
+    {
+        bool isMoving = rb.velocity.x != 0;
         anim.SetBool("isMoving", isMoving);
     }
 }
