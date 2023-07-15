@@ -5,15 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator anim;
+
+    [Header("Physics")]
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private float jumpForce = 5;
+
     private float xInput;
     private int facingDir = 1;//for future use 
     private bool facingRight = true;
-    private Animator anim;
-    private float groundCheckDistance = 1.3;//test this distance in debug mode to get value at which its on ground
-    private bool isGrounded;
+    
+     [Header("Collision Checks")]
     [SerializeField] private LayerMask whichIsGround;
+    private float groundCheckDistance = 1.3f;//test this distance in debug mode to get value at which its on ground
+    private bool isGrounded;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,10 +53,15 @@ public class Player : MonoBehaviour
     {
         rb.velocity = new Vector2(xInput * moveSpeed, rb.velocity.y);
     }
+
     private void AnimationControllers()
     {
         bool isMoving = rb.velocity.x != 0;
         anim.SetBool("isMoving", isMoving);
+
+        anim.SetBool("isGrounded",isGrounded);
+
+        anim.SetFloat("yVelocity",rb.velocity.y);
     }
 
     private void Flip()
