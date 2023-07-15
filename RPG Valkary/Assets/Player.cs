@@ -18,6 +18,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float dashCooldownDuration;
     private float dashCooldownTime;
 
+
+    [Header("Attack Info")]
+    private int comboCounter;
+    private bool isAttacking;
+
     private float xInput;
     private int facingDir = 1;//for future use 
     private bool facingRight = true;
@@ -55,6 +60,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
             DashAbility();
+
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+            isAttacking = true;
+    }
+
+   public void AttackOver()
+    {
+        isAttacking = false;
     }
 
     private void DashAbility()
@@ -90,6 +103,10 @@ public class Player : MonoBehaviour
         anim.SetFloat("yVelocity", rb.velocity.y);
 
         anim.SetBool("isDashing", dashTime > 0);
+
+        anim.SetBool("isAttacking",isAttacking);
+
+        anim.SetInteger("comboCounter",comboCounter);
     }
 
     private void Flip()
