@@ -558,6 +558,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   facingDir: 1
+  dashSpeed: 8
+  dashDuration: 0.4
+  dashDir: 0
+  dashUsageTime: 0
+  dashCooldown: 3
 --- !u!4 &1371996252
 Transform:
   m_ObjectHideFlags: 0

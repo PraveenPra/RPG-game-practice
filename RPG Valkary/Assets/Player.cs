@@ -37,7 +37,8 @@ public class Player : MonoBehaviour
     public float dashSpeed = 15f;
     public float dashDuration = 0.4f;
     public float dashDir;
-
+    [SerializeField]private float dashUsageTime;
+    [SerializeField]private float dashCooldown = 3f;
 
     private void Awake()
     {
@@ -100,8 +101,14 @@ public class Player : MonoBehaviour
 
     void CheckForDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {   //u want to dash on x input direction - dash while moving
+        dashUsageTime -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTime < 0)
+        {   
+            //start the dash ability cooldown counter
+            dashUsageTime = dashCooldown;
+            
+            //u want to dash on x input direction - dash while moving
             dashDir = Input.GetAxisRaw("Horizontal");
 
             //dash when idle - no xinput/movement
