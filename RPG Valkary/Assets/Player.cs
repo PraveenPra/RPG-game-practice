@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
      [SerializeField]private Transform WallCheck;
     [SerializeField]private float WallCheckDistance;
     [SerializeField]private LayerMask whereIsGround;
+
+    [Header("Flip info")]
+    public int facingDir = 1;
+    private bool facingRight = true;
+
     private void Awake()
     {
         //because these classes are not monbehaviour im using new keyword to create an instance
@@ -57,11 +62,32 @@ public class Player : MonoBehaviour
     }
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
-    {
+    {   //for movement
         rb.velocity = new Vector2(_xVelocity, _yVelocity);
+        FlipController(_xVelocity);
     }
 
     public bool IsGroundDetected ()=> Physics2D.Raycast(GroundCheck.position, Vector2.down,GroundCheckDistance,whereIsGround);
+
+
+    public void Flip()
+    {
+        facingDir *= -1;
+        facingRight = !facingRight;
+        transform.Rotate(0,180,0);
+    }
+
+    private void FlipController(float _x)
+    {
+        //here x can be used while move, jump etc.. any state needing flip on x
+        if(_x < 0 && facingRight)
+        Flip();
+        else if(_x > 0 && !facingRight)
+        Flip();
+    }
+
+
+
      private void OnDrawGizmos() {
 
         //draw a line from the player(GroundCheck) position to whatever distance(groundcheckdist) value till it touches the ground slightly.Here the line goes down from player to gnd from(0,0) to (0,0-1) = downwards line
