@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
+    public PlayerDashState dashState { get; private set; }
     #endregion
 
     [Header("Move info")]
@@ -32,6 +33,10 @@ public class Player : MonoBehaviour
     public int facingDir = 1;
     private bool facingRight = true;
 
+    [Header("Dash info")]
+    public float dashSpeed = 25f;
+    public float dashDuration = 0.4f;
+
     private void Awake()
     {
         //because these classes are not monbehaviour im using new keyword to create an instance
@@ -42,6 +47,7 @@ public class Player : MonoBehaviour
         moveState = new PlayerMoveState(this, stateMachine, "Move");
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
+         dashState = new PlayerDashState(this, stateMachine, "Dash");
 
     }
 
