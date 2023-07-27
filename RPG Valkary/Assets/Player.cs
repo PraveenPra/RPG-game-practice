@@ -17,10 +17,13 @@ public class Player : MonoBehaviour
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
     public PlayerDashState dashState { get; private set; }
+    public PlayerWallSlideState wallSlideState { get; private set; }
+    public PlayerWallJumpState wallJumpState { get; private set; }
     #endregion
 
     [Header("Move info")]
     public float moveSpeed = 7f;
+    public float jumpForce = 12f;
 
     [Header("Collision info")]
     [SerializeField] private Transform GroundCheck;
@@ -51,6 +54,8 @@ public class Player : MonoBehaviour
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
         dashState = new PlayerDashState(this, stateMachine, "Dash");
+        wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
+         wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
 
     }
 
@@ -81,6 +86,8 @@ public class Player : MonoBehaviour
 
     public bool IsGroundDetected() => Physics2D.Raycast(GroundCheck.position, Vector2.down, GroundCheckDistance, whereIsGround);
 
+    public bool IsWallDetected() => Physics2D.Raycast(WallCheck.position, Vector2.right * facingDir, WallCheckDistance, whereIsGround);
+
 
     public void Flip()
     {
@@ -101,6 +108,9 @@ public class Player : MonoBehaviour
 
     void CheckForDashInput()
     {
+        if(IsWallDetected())
+        return;//dont dash when on wall sliding or on ground but touching wall
+
         dashUsageTime -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTime < 0)

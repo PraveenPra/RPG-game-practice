@@ -11,6 +11,8 @@ public class PlayerState
 
 
     protected float xInput;
+    protected float yInput;
+
     protected Rigidbody2D rb; //just for easy ref everywhere without using player.rb instead use rb
     protected float stateTimer;
     #endregion
@@ -34,6 +36,7 @@ public class PlayerState
     {
         //Because there is no update function here due to not monobehaviour, it get the update function from player who is using the state machine
         xInput = Input.GetAxisRaw("Horizontal");
+        yInput = Input.GetAxisRaw("Vertical");
 
         stateTimer -= Time.deltaTime;
     }

@@ -13,6 +13,8 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
+
+        rb.velocity = new Vector2(0,0);//stop all movements when u enetr idle st from anywhere
     }
 
     public override void Update()
@@ -21,6 +23,9 @@ public class PlayerIdleState : PlayerGroundedState
 
         if(xInput != 0)
         stateMachine.ChangeState(player.moveState);
+
+        if(xInput == player.facingDir && player.IsWallDetected())
+        return; //when player moves to the wall he should not play any move animation, just stop the execution of movement
     }
 
 
