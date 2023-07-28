@@ -15,6 +15,8 @@ public class PlayerState
 
     protected Rigidbody2D rb; //just for easy ref everywhere without using player.rb instead use rb
     protected float stateTimer;
+    protected bool triggerCalled;
+
     #endregion
 
     #region Constructor
@@ -30,6 +32,7 @@ public class PlayerState
     {
         player.anim.SetBool(animBoolName, true);
         rb = player.rb;
+        triggerCalled = false;
     }
 
     public virtual void Update()
@@ -49,4 +52,8 @@ public class PlayerState
     }
 
 
+    public virtual void AnimationFinishTrigger()
+    {
+        triggerCalled = true;
+    }
 }

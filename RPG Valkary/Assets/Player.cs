@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public PlayerDashState dashState { get; private set; }
     public PlayerWallSlideState wallSlideState { get; private set; }
     public PlayerWallJumpState wallJumpState { get; private set; }
+        public PlayerPrimaryAttackState primaryAttackState { get; private set; }
     #endregion
 
     [Header("Move info")]
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(this, stateMachine, "Dash");
         wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
          wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
-
+        primaryAttackState = new PlayerPrimaryAttackState(this,stateMachine,"Attack");
     }
 
     private void Start()
@@ -140,4 +141,6 @@ public class Player : MonoBehaviour
         //Here the line goes down from player to rightside from(0,0) to (0 + 1,0) = rightside line. Just like a graph, draw which side the detection should happen 
         Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + WallCheckDistance, WallCheck.position.y));
     }
+
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 }
