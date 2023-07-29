@@ -38,11 +38,11 @@ public class Player : MonoBehaviour
     private bool facingRight = true;
 
     [Header("Dash info")]
-    public float dashSpeed = 15f;
-    public float dashDuration = 0.4f;
+    public float dashSpeed = 30f;
+    public float dashDuration = 0.1f;
     public float dashDir;
     [SerializeField]private float dashUsageTime;
-    [SerializeField]private float dashCooldown = 3f;
+    [SerializeField]private float dashCooldown = 2f;
 
     private void Awake()
     {
@@ -84,6 +84,18 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(_xVelocity, _yVelocity);
         FlipController(_xVelocity);
     }
+
+    // public void SetAccelaration(float _xInitialVelocity,float _yInitialVelocity,float duration)
+    // {//for gradual rising movements:dash
+    //     // float speedMultiplier = 1.5f;
+    //    Vector2 initialVelocity = new Vector2(0, 0);
+    //    Vector2 finalVelocity = new Vector2(_xInitialVelocity * speedMultiplier, _yInitialVelocity * speedMultiplier);
+
+    //    Vector2 accelaration = (finalVelocity - initialVelocity)/duration;
+
+    //    rb.velocity = accelaration;
+    //    FlipController(_xInitialVelocity);
+    // }
 
     public bool IsGroundDetected() => Physics2D.Raycast(GroundCheck.position, Vector2.down, GroundCheckDistance, whereIsGround);
 
