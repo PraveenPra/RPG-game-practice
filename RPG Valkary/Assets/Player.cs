@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
     [SerializeField]private float dashUsageTime;
     [SerializeField]private float dashCooldown = 2f;
 
+
+    public bool isBusy {get; private set;}//use when u want to stop any state from interupting this state 
     private void Awake()
     {
         //because these classes are not monbehaviour im using new keyword to create an instance
@@ -77,6 +79,15 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
 
         CheckForDashInput();
+    }
+
+    public IEnumerator BusyFor(float _seconds)
+    {
+        isBusy = true;
+
+        yield return new WaitForSeconds(_seconds);
+
+        isBusy = false;
     }
 
     public void SetVelocity(float _xVelocity, float _yVelocity)

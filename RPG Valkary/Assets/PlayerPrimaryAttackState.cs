@@ -23,6 +23,8 @@ public class PlayerPrimaryAttackState : PlayerState
         comboCounter = 0;
 
         player.anim.SetInteger("ComboCounter",comboCounter);
+
+        stateTimer = 0.1f; //movenmt for short bit while attacking(forward,backward push etc..)
     }
 
     public override void Update()
@@ -31,6 +33,9 @@ public class PlayerPrimaryAttackState : PlayerState
 
         if(triggerCalled)
         stateMachine.ChangeState(player.idleState);
+
+        if(stateTimer < 0)
+        rb.velocity = new Vector2(0,0); //no movemnt while attack only 0.1s move
     }
 
     public override void Exit()
@@ -40,5 +45,7 @@ public class PlayerPrimaryAttackState : PlayerState
         comboCounter++;
 
         lastTimeAttacked = Time.time;
+
+       player.StartCoroutine("BusyFor",0.15f);
     }
 }
