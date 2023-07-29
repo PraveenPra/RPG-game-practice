@@ -25,7 +25,12 @@ public class PlayerPrimaryAttackState : PlayerState
 
         player.anim.SetInteger("ComboCounter",comboCounter);
 
-        player.SetVelocity(player.attackMovements[comboCounter].x * player.facingDir,player.attackMovements[comboCounter].y);//hops wjile attacking
+        float attackDir = player.facingDir;
+
+        if(xInput != 0 )
+        attackDir = xInput;//if while attack is right and suddenly i want to attack left, u can use this to turn left quickly.. attacks based on input dir else facing dir
+
+        player.SetVelocity(player.attackMovements[comboCounter].x * attackDir,player.attackMovements[comboCounter].y);//hops wjile attacking
 
         stateTimer = 0.1f; //movenmt for short bit while attacking(forward,backward push etc..)
     }
