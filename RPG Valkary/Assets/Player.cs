@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     public PlayerDashState dashState { get; private set; }
     public PlayerWallSlideState wallSlideState { get; private set; }
     public PlayerWallJumpState wallJumpState { get; private set; }
-        public PlayerPrimaryAttackState primaryAttackState { get; private set; }
+    public PlayerPrimaryAttackState primaryAttackState { get; private set; }
     #endregion
 
     [Header("Move info")]
@@ -41,11 +41,15 @@ public class Player : MonoBehaviour
     public float dashSpeed = 30f;
     public float dashDuration = 0.1f;
     public float dashDir;
-    [SerializeField]private float dashUsageTime;
-    [SerializeField]private float dashCooldown = 2f;
+    [SerializeField] private float dashUsageTime;
+    [SerializeField] private float dashCooldown = 2f;
 
 
-    public bool isBusy {get; private set;}//use when u want to stop any state from interupting this state 
+    public bool isBusy { get; private set; }//use when u want to stop any state from interupting this state 
+
+    public Vector2[] attackMovements;//hops while attacking
+
+
     private void Awake()
     {
         //because these classes are not monbehaviour im using new keyword to create an instance
@@ -58,8 +62,8 @@ public class Player : MonoBehaviour
         airState = new PlayerAirState(this, stateMachine, "Jump");
         dashState = new PlayerDashState(this, stateMachine, "Dash");
         wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
-         wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
-        primaryAttackState = new PlayerPrimaryAttackState(this,stateMachine,"Attack");
+        wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
+        primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
     }
 
     private void Start()
@@ -90,11 +94,15 @@ public class Player : MonoBehaviour
         isBusy = false;
     }
 
+    #region Velocity
+
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {   //for movement
         rb.velocity = new Vector2(_xVelocity, _yVelocity);
         FlipController(_xVelocity);
     }
+
+    public void ZeroVelocity() => rb.velocity = new Vector2(0, 0);
 
     // public void SetAccelaration(float _xInitialVelocity,float _yInitialVelocity,float duration)
     // {//for gradual rising movements:dash
@@ -107,12 +115,27 @@ public class Player : MonoBehaviour
     //    rb.velocity = accelaration;
     //    FlipController(_xInitialVelocity);
     // }
+    #endregion
 
+    #region  CollisionDetect
     public bool IsGroundDetected() => Physics2D.Raycast(GroundCheck.position, Vector2.down, GroundCheckDistance, whereIsGround);
 
     public bool IsWallDetected() => Physics2D.Raycast(WallCheck.position, Vector2.right * facingDir, WallCheckDistance, whereIsGround);
 
 
+    private void OnDrawGizmos()
+    {
+
+        //draw a line from the player(GroundCheck) position to whatever distance(groundcheckdist) value till it touches the ground slightly.Here the line goes down from player to gnd from(0,0) to (0,0-1) = downwards line
+        Gizmos.DrawLine(GroundCheck.position, new Vector3(GroundCheck.position.x, GroundCheck.position.y - GroundCheckDistance));
+
+        //Here the line goes down from player to rightside from(0,0) to (0 + 1,0) = rightside line. Just like a graph, draw which side the detection should happen 
+        Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + WallCheckDistance, WallCheck.position.y));
+    }
+
+    #endregion
+
+    #region  Flip
     public void Flip()
     {
         facingDir *= -1;
@@ -128,20 +151,20 @@ public class Player : MonoBehaviour
         else if (_x > 0 && !facingRight)
             Flip();
     }
-
+    #endregion
 
     void CheckForDashInput()
     {
-        if(IsWallDetected())
-        return;//dont dash when on wall sliding or on ground but touching wall
+        if (IsWallDetected())
+            return;//dont dash when on wall sliding or on ground but touching wall
 
         dashUsageTime -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTime < 0)
-        {   
+        {
             //start the dash ability cooldown counter
             dashUsageTime = dashCooldown;
-            
+
             //u want to dash on x input direction - dash while moving
             dashDir = Input.GetAxisRaw("Horizontal");
 
@@ -153,16 +176,6 @@ public class Player : MonoBehaviour
 
             stateMachine.ChangeState(dashState);
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-
-        //draw a line from the player(GroundCheck) position to whatever distance(groundcheckdist) value till it touches the ground slightly.Here the line goes down from player to gnd from(0,0) to (0,0-1) = downwards line
-        Gizmos.DrawLine(GroundCheck.position, new Vector3(GroundCheck.position.x, GroundCheck.position.y - GroundCheckDistance));
-
-        //Here the line goes down from player to rightside from(0,0) to (0 + 1,0) = rightside line. Just like a graph, draw which side the detection should happen 
-        Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + WallCheckDistance, WallCheck.position.y));
     }
 
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();

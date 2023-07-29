@@ -675,6 +675,10 @@ MonoBehaviour:
   dashDir: 0
   dashUsageTime: 0
   dashCooldown: 3
+  attackMovements:
+  - {x: 3, y: 1.5}
+  - {x: 1, y: 2.5}
+  - {x: 4, y: 1.5}
 --- !u!4 &1371996252
 Transform:
   m_ObjectHideFlags: 0

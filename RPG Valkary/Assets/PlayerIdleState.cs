@@ -14,7 +14,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
 
-        rb.velocity = new Vector2(0,0);//stop all movements when u enetr idle st from anywhere
+       player.ZeroVelocity();//stop all movements when u enetr idle st from anywhere
     }
 
     public override void Update()

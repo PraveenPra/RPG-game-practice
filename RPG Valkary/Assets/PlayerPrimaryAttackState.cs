@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerPrimaryAttackState : PlayerState
 {
+   
 
     private int comboCounter; //for 0 1 2 attacks index
     private float lastTimeAttacked;// to compare & do 1attack or next attack in combo
@@ -24,6 +25,8 @@ public class PlayerPrimaryAttackState : PlayerState
 
         player.anim.SetInteger("ComboCounter",comboCounter);
 
+        player.SetVelocity(player.attackMovements[comboCounter].x * player.facingDir,player.attackMovements[comboCounter].y);//hops wjile attacking
+
         stateTimer = 0.1f; //movenmt for short bit while attacking(forward,backward push etc..)
     }
 
@@ -35,7 +38,7 @@ public class PlayerPrimaryAttackState : PlayerState
         stateMachine.ChangeState(player.idleState);
 
         if(stateTimer < 0)
-        rb.velocity = new Vector2(0,0); //no movemnt while attack only 0.1s move
+       player.ZeroVelocity(); //no movemnt while attack only 0.1s move
     }
 
     public override void Exit()
