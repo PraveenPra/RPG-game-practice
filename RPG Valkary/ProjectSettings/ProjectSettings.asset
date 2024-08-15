@@ -745,11 +745,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 0
-  cloudProjectId: 
+  cloudProjectId: 3cd1a68f-fe01-4f21-b07b-de6ca2f851cc
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: RPG Valkary
+  organizationId: manikanta-l-as-publisher
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
