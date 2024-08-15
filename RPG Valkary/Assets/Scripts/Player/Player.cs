@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-    #region Components
-    public Animator anim { get; private set; }
-    public Rigidbody2D rb { get; private set; }
-    #endregion
+  
 
     #region States
 
@@ -26,16 +23,8 @@ public class Player : MonoBehaviour
     public float moveSpeed = 7f;
     public float jumpForce = 12f;
 
-    [Header("Collision info")]
-    [SerializeField] private Transform GroundCheck;
-    [SerializeField] private float GroundCheckDistance;
-    [SerializeField] private Transform WallCheck;
-    [SerializeField] private float WallCheckDistance;
-    [SerializeField] private LayerMask whereIsGround;
+   
 
-    [Header("Flip info")]
-    public int facingDir = 1;
-    private bool facingRight = true;
 
     [Header("Dash info")]
     public float dashSpeed = 30f;
@@ -50,8 +39,9 @@ public class Player : MonoBehaviour
     public Vector2[] attackMovements;//hops while attacking
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         //because these classes are not monbehaviour im using new keyword to create an instance
         stateMachine = new PlayerStateMachine();
 
@@ -66,15 +56,16 @@ public class Player : MonoBehaviour
         primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
     }
 
-    private void Start()
+    protected override void Start()
     {
-        anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+      base.Start();
         stateMachine.Initialize(idleState);
     }
 
-    private void Update()
+    protected override void Update()
     {
+
+        base.Update();
         //because we wont use monobehaviours in the PlayerState & stateMachine classes, we need to pass the update from the play because it has the monobehaviour.
         // Less monobehavior in the game, the better
 
@@ -94,64 +85,10 @@ public class Player : MonoBehaviour
         isBusy = false;
     }
 
-    #region Velocity
+  
 
-    public void SetVelocity(float _xVelocity, float _yVelocity)
-    {   //for movement
-        rb.velocity = new Vector2(_xVelocity, _yVelocity);
-        FlipController(_xVelocity);
-    }
+   
 
-    public void ZeroVelocity() => rb.velocity = new Vector2(0, 0);
-
-    // public void SetAccelaration(float _xInitialVelocity,float _yInitialVelocity,float duration)
-    // {//for gradual rising movements:dash
-    //     // float speedMultiplier = 1.5f;
-    //    Vector2 initialVelocity = new Vector2(0, 0);
-    //    Vector2 finalVelocity = new Vector2(_xInitialVelocity * speedMultiplier, _yInitialVelocity * speedMultiplier);
-
-    //    Vector2 accelaration = (finalVelocity - initialVelocity)/duration;
-
-    //    rb.velocity = accelaration;
-    //    FlipController(_xInitialVelocity);
-    // }
-    #endregion
-
-    #region  CollisionDetect
-    public bool IsGroundDetected() => Physics2D.Raycast(GroundCheck.position, Vector2.down, GroundCheckDistance, whereIsGround);
-
-    public bool IsWallDetected() => Physics2D.Raycast(WallCheck.position, Vector2.right * facingDir, WallCheckDistance, whereIsGround);
-
-
-    private void OnDrawGizmos()
-    {
-
-        //draw a line from the player(GroundCheck) position to whatever distance(groundcheckdist) value till it touches the ground slightly.Here the line goes down from player to gnd from(0,0) to (0,0-1) = downwards line
-        Gizmos.DrawLine(GroundCheck.position, new Vector3(GroundCheck.position.x, GroundCheck.position.y - GroundCheckDistance));
-
-        //Here the line goes down from player to rightside from(0,0) to (0 + 1,0) = rightside line. Just like a graph, draw which side the detection should happen 
-        Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + WallCheckDistance, WallCheck.position.y));
-    }
-
-    #endregion
-
-    #region  Flip
-    public void Flip()
-    {
-        facingDir *= -1;
-        facingRight = !facingRight;
-        transform.Rotate(0, 180, 0);
-    }
-
-    private void FlipController(float _x)
-    {
-        //here x can be used while move, jump etc.. any state needing flip on x
-        if (_x < 0 && facingRight)
-            Flip();
-        else if (_x > 0 && !facingRight)
-            Flip();
-    }
-    #endregion
 
     void CheckForDashInput()
     {
