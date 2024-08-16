@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class EnemyState 
 {
-    protected Enemy enemy;
+    protected Enemy enemyBase;
     protected EnemyStateMachine stateMachine;
 
     private string animBoolName;
 
 protected float stateTimer;
     protected bool triggerCalled;
-    public EnemyState(Enemy _enemy, EnemyStateMachine _stateMachine, string _animBoolName)
+    public EnemyState(Enemy _enemyBase, EnemyStateMachine _stateMachine, string _animBoolName)
     {
-        this.enemy = _enemy;
+        this.enemyBase = _enemyBase;
         this.stateMachine = _stateMachine;
         this.animBoolName = _animBoolName;
     }  
@@ -25,11 +25,31 @@ protected float stateTimer;
     public virtual void Enter()
     {
         triggerCalled = false;
-        enemy.anim.SetBool(animBoolName, true);
+        enemyBase.anim.SetBool(animBoolName, true);
     }
 
     public virtual void Exit()
     {
-        enemy.anim.SetBool(animBoolName, false);
+        enemyBase.anim.SetBool(animBoolName, false);
     }
 }
+//template for states===========================
+// public SkeletonIdleState(Enemy _enemy, EnemyStateMachine _stateMachine, string _animBoolName) : base(_enemy, _stateMachine, _animBoolName)
+//    {
+
+//     }
+
+//     public override void Enter()
+//     {
+//         base.Enter();
+//     }
+
+//     public override void Update()
+//     {
+//         base.Update();
+//     }
+
+//     public override void Exit()
+//     {
+//         base.Exit();
+//     }
