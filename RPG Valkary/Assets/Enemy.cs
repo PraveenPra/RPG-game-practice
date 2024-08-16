@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
+    [Header("Move info")]
+    public float moveSpeed;
+    public float idleTime;
     
     public EnemyStateMachine stateMachine { get; private set; }
     // Start is called before the first frame update
