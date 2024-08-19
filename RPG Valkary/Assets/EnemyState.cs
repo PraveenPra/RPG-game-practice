@@ -2,30 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyState 
+public class EnemyState
 {
     protected Enemy enemyBase;
     protected EnemyStateMachine stateMachine;
-
+    protected Rigidbody2D rb;
     private string animBoolName;
 
-protected float stateTimer;
+    protected float stateTimer;
     protected bool triggerCalled;
     public EnemyState(Enemy _enemyBase, EnemyStateMachine _stateMachine, string _animBoolName)
     {
         this.enemyBase = _enemyBase;
         this.stateMachine = _stateMachine;
         this.animBoolName = _animBoolName;
-    }  
+    }
 
     public virtual void Update()
     {
-       stateTimer -= Time.deltaTime;
+        stateTimer -= Time.deltaTime;
     }
     public virtual void Enter()
     {
         triggerCalled = false;
         enemyBase.anim.SetBool(animBoolName, true);
+
+        rb = enemyBase.rb;
     }
 
     public virtual void Exit()
@@ -34,8 +36,11 @@ protected float stateTimer;
     }
 }
 //template for states===========================
-// public SkeletonIdleState(Enemy _enemy, EnemyStateMachine _stateMachine, string _animBoolName) : base(_enemy, _stateMachine, _animBoolName)
+//  private Enemy_Skeleton enemy;
+
+//     public SkeletonBattleState(Enemy _enemyBase, EnemyStateMachine _stateMachine, string _animBoolName,Enemy_Skeleton _enemy) : base(_enemy, _stateMachine, _animBoolName)
 //    {
+//         this.enemy = _enemy;
 
 //     }
 
